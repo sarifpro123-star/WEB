@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Prompt Generator Pro — Light Neo-Brutalist 3D Studio</title>
+
+  <!-- Google Fonts: Lexend Mega, Space Grotesk, DM Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&family=Lexend+Mega:wght@700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF for PDF Report Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF6EE',
+            apricot: '#FFB38A',
+            lavender: '#E3D5CA',
+            mintblue: '#B5E2FA',
+            charcoal: '#242424',
+            purewhite: '#FFFFFF',
+            inkblack: '#171717',
+            softmint: '#B8E6C1',
+            coralalert: '#FF8A8A',
+          },
+          fontFamily: {
+            display: ['"Lexend Mega"', '"Space Grotesk"', 'sans-serif'],
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"DM Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'neo-sm': '3px 3px 0px #171717',
+            'neo': '5px 5px 0px #171717',
+            'neo-lg': '8px 8px 0px #171717',
+            'neo-xl': '10px 10px 0px #171717',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-cream: #FAF6EE;
+      --accent-apricot: #FFB38A;
+      --accent-lavender: #E3D5CA;
+      --accent-mintblue: #B5E2FA;
+      --text-charcoal: #242424;
+      --surface-white: #FFFFFF;
+      --border-black: #171717;
+      --accent-mint: #B8E6C1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-charcoal);
+      font-family: 'DM Sans', sans-serif;
+      background-image:
+        radial-gradient(#17171714 1.5px, transparent 1.5px),
+        radial-gradient(#1717170d 1.5px, #FAF6EE 1.5px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      overflow-x: hidden;
+    }
+
+    /* Neo-Brutalist 3D Surface & Interactive Classes */
+    .neo-card {
+      border: 3px solid #171717;
+      border-radius: 16px;
+      box-shadow: 6px 6px 0px #171717;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .neo-card-lg {
+      border: 3px solid #171717;
+      border-radius: 18px;
+      box-shadow: 8px 8px 0px #171717;
+    }
+
+    .neo-card-hover:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0px #171717;
+    }
+
+    .neo-btn {
+      border: 3px solid #171717;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #171717;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .neo-btn:hover:not(:disabled) {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #171717;
+    }
+
+    .neo-btn:active:not(:disabled) {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0px #171717;
+    }
+
+    .neo-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .neo-btn-sm {
+      border: 2.5px solid #171717;
+      border-radius: 10px;
+      box-shadow: 3px 3px 0px #171717;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .neo-btn-sm:hover:not(:disabled) {
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 4.5px 4.5px 0px #171717;
+    }
+
+    .neo-btn-sm:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #171717;
+    }
+
+    .neo-pill {
+      border: 2.5px solid #171717;
+      border-radius: 9999px;
+      box-shadow: 3px 3px 0px #171717;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+    }
+
+    .neo-pill:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px #171717;
+    }
+
+    .neo-pill:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #171717;
+    }
+
+    /* Animated Dropzone */
+    .dropzone-box {
+      border: 3px dashed #171717;
+      border-radius: 16px;
+      background-color: #FFFFFF;
+      box-shadow: 6px 6px 0px #171717;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .dropzone-box:hover,
+    .dropzone-box.drag-active {
+      border-style: solid;
+      background-color: #FFFDF9;
+      transform: translate(-2px, -2px);
+      box-shadow: 9px 9px 0px #171717;
+    }
+
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-4px) rotate(1deg); }
+    }
+
+    .animate-float-badge {
+      animation: floatBadge 3.5s ease-in-out infinite;
+    }
+
+    @keyframes cardPopIn {
+      0% { opacity: 0; transform: translateY(14px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animate-card-in {
+      animation: cardPopIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF6EE;
+      border-left: 2px solid #171717;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #FFB38A;
+      border: 2px solid #171717;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B5E2FA;
+    }
+
+    /* Syntax highlighting for JSON */
+    .json-key { color: #1d4ed8; font-weight: 700; }
+    .json-string { color: #15803d; }
+    .json-number { color: #b45309; font-weight: 700; }
+    .json-boolean { color: #7e22ce; font-weight: 700; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-apricot selection:text-inkblack">
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <header class="sticky top-0 z-40 bg-cream/95 backdrop-blur-sm border-b-[3px] border-inkblack">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand Logo -->
+        <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+          <div class="w-12 h-12 rounded-xl bg-apricot border-[3px] border-inkblack shadow-neo-sm flex items-center justify-center group-hover:bg-mintblue transition-colors">
+            <i data-lucide="sparkles" class="w-6 h-6 text-inkblack stroke-[2.5]"></i>
+          </div>
+          <div>
+            <div class="font-display text-sm sm:text-base md:text-lg font-black tracking-tight text-inkblack leading-none">
+              AI PROMPT
+            </div>
+            <div class="inline-flex items-center gap-1.5 mt-1">
+              <span class="font-heading font-bold text-xs sm:text-sm tracking-wide uppercase text-charcoal">GENERATOR</span>
+              <span class="px-2 py-0.5 text-[10px] font-display font-extrabold bg-mintblue border-2 border-inkblack rounded-md shadow-[2px_2px_0px_#171717]">PRO</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-3" aria-label="Main Navigation">
+          <button id="nav-home" onclick="navigateTo('home')" class="neo-btn px-4 py-2.5 text-sm flex items-center gap-2 bg-purewhite text-charcoal">
+            <i data-lucide="layout-grid" class="w-4 h-4 stroke-[2.5]"></i>
+            <span>Home</span>
+          </button>
+          <button id="nav-image" onclick="navigateTo('image')" class="neo-btn px-4 py-2.5 text-sm flex items-center gap-2 bg-purewhite text-charcoal">
+            <i data-lucide="image" class="w-4 h-4 stroke-[2.5]"></i>
+            <span>Image Generator</span>
+          </button>
+          <button id="nav-video" onclick="navigateTo('video')" class="neo-btn px-4 py-2.5 text-sm flex items-center gap-2 bg-purewhite text-charcoal">
+            <i data-lucide="clapperboard" class="w-4 h-4 stroke-[2.5]"></i>
+            <span>Video Generator</span>
+          </button>
+          <button id="nav-history" onclick="navigateTo('history')" class="neo-btn px-4 py-2.5 text-sm flex items-center gap-2 bg-purewhite text-charcoal">
+            <i data-lucide="archive" class="w-4 h-4 stroke-[2.5]"></i>
+            <span>History</span>
+            <span id="history-count-badge" class="ml-0.5 px-2 py-0.5 text-xs font-extrabold bg-softmint border-2 border-inkblack rounded-full">0</span>
+          </button>
+        </nav>
+
+        <!-- Mobile Menu Toggle -->
+        <div class="flex md:hidden items-center gap-2">
+          <button onclick="navigateTo('history')" class="neo-btn-sm px-2.5 py-2 bg-softmint text-xs flex items-center gap-1" aria-label="History">
+            <i data-lucide="archive" class="w-4 h-4 stroke-[2.5]"></i>
+            <span id="mobile-history-badge" class="font-extrabold">0</span>
+          </button>
+          <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="neo-btn p-2.5 bg-apricot text-inkblack" aria-label="Toggle Menu">
+            <i id="mobile-menu-icon" data-lucide="menu" class="w-6 h-6 stroke-[2.5]"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t-[3px] border-inkblack bg-cream px-4 py-4 space-y-3 shadow-neo">
+      <button id="mnav-home" onclick="navigateTo('home'); toggleMobileMenu(false)" class="neo-btn w-full px-4 py-3 text-left flex items-center justify-between bg-purewhite">
+        <span class="flex items-center gap-2.5"><i data-lucide="layout-grid" class="w-5 h-5 stroke-[2.5]"></i> Home</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+      <button id="mnav-image" onclick="navigateTo('image'); toggleMobileMenu(false)" class="neo-btn w-full px-4 py-3 text-left flex items-center justify-between bg-purewhite">
+        <span class="flex items-center gap-2.5"><i data-lucide="image" class="w-5 h-5 stroke-[2.5]"></i> Image Generator</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+      <button id="mnav-video" onclick="navigateTo('video'); toggleMobileMenu(false)" class="neo-btn w-full px-4 py-3 text-left flex items-center justify-between bg-purewhite">
+        <span class="flex items-center gap-2.5"><i data-lucide="clapperboard" class="w-5 h-5 stroke-[2.5]"></i> Video Generator</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+      <button id="mnav-history" onclick="navigateTo('history'); toggleMobileMenu(false)" class="neo-btn w-full px-4 py-3 text-left flex items-center justify-between bg-purewhite">
+        <span class="flex items-center gap-2.5"><i data-lucide="archive" class="w-5 h-5 stroke-[2.5]"></i> History Archive</span>
+        <span id="mnav-history-count" class="px-2.5 py-0.5 text-xs font-extrabold bg-softmint border-2 border-inkblack rounded-full">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+
+    <!-- ==================== VIEW 1: HOME DASHBOARD ==================== -->
+    <section id="view-home" class="space-y-10 animate-card-in">
+      <!-- Hero Banner -->
+      <div class="neo-card-lg bg-purewhite p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div class="max-w-2xl space-y-5">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-softmint border-[2.5px] border-inkblack shadow-neo-sm animate-float-badge">
+              <span class="w-2.5 h-2.5 rounded-full bg-inkblack animate-ping"></span>
+              <span class="font-heading font-bold text-xs sm:text-sm uppercase tracking-wider text-inkblack">Multimodal Visual Reverse-Engineering</span>
+            </div>
+
+            <h1 class="font-display text-2xl sm:text-4xl lg:text-5xl font-black text-inkblack leading-[1.12] tracking-tight">
+              Turn Any Image or Video Into Studio-Grade AI Prompts.
+            </h1>
+
+            <p class="text-base sm:text-lg text-charcoal/90 font-medium leading-relaxed">
+              Deconstruct visual media into structured 10-point image blueprints and 8-second segmented cinematic video timelines. Copy individual attributes, export formatted <span class="font-mono font-bold bg-lavender px-1.5 py-0.5 rounded border border-inkblack">.JSON</span>, <span class="font-mono font-bold bg-mintblue px-1.5 py-0.5 rounded border border-inkblack">.TXT</span>, or printable <span class="font-mono font-bold bg-apricot px-1.5 py-0.5 rounded border border-inkblack">.PDF</span> reports.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <button onclick="navigateTo('image')" class="neo-btn bg-apricot px-6 py-4 text-base sm:text-lg text-inkblack flex items-center gap-2.5">
+                <i data-lucide="image" class="w-5 h-5 stroke-[2.5]"></i>
+                <span>Launch Image Generator</span>
+              </button>
+              <button onclick="navigateTo('video')" class="neo-btn bg-mintblue px-6 py-4 text-base sm:text-lg text-inkblack flex items-center gap-2.5">
+                <i data-lucide="clapperboard" class="w-5 h-5 stroke-[2.5]"></i>
+                <span>Launch Video Generator</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Decorative 3D Isometric Stack Card -->
+          <div class="lg:w-[380px] shrink-0">
+            <div class="neo-card bg-lavender p-5 space-y-4">
+              <div class="flex items-center justify-between border-b-2 border-inkblack pb-3">
+                <span class="font-mono text-xs font-bold uppercase tracking-wider bg-purewhite px-2.5 py-1 rounded-md border-2 border-inkblack">STRICT OUTPUT ENGINE</span>
+                <div class="flex gap-1.5">
+                  <span class="w-3.5 h-3.5 rounded-full bg-apricot border-2 border-inkblack"></span>
+                  <span class="w-3.5 h-3.5 rounded-full bg-mintblue border-2 border-inkblack"></span>
+                  <span class="w-3.5 h-3.5 rounded-full bg-softmint border-2 border-inkblack"></span>
+                </div>
+              </div>
+              <div class="bg-purewhite border-2 border-inkblack rounded-xl p-3.5 font-mono text-xs space-y-2 shadow-neo-sm">
+                <div class="text-inkblack font-bold">---ENGLISH PROMPT---</div>
+                <p class="text-charcoal/80 leading-relaxed">
+                  "Sun-drenched architectural courtyard crafted from warm travertine stone, soft golden hour rim lighting casting crisp geometric shadows, 35mm anamorphic lens..."
+                </p>
+                <div class="text-inkblack font-bold pt-1">---JSON OUTPUT---</div>
+                <div class="text-emerald-700 font-semibold">{ "lighting": "Warm golden hour rim...", "camera_angle": "Low-angle wide shot..." }</div>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center font-heading text-xs font-bold">
+                <div class="bg-apricot border-2 border-inkblack rounded-lg py-2 shadow-[2px_2px_0px_#171717]">10+ Fields</div>
+                <div class="bg-mintblue border-2 border-inkblack rounded-lg py-2 shadow-[2px_2px_0px_#171717]">8s Segments</div>
+                <div class="bg-softmint border-2 border-inkblack rounded-lg py-2 shadow-[2px_2px_0px_#171717]">PDF / JSON</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Mode Launch Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Mode 1 Card: Image to Prompt -->
+        <div class="neo-card neo-card-hover bg-apricot p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 bg-purewhite border-2 border-inkblack rounded-lg font-mono text-xs font-bold shadow-neo-sm">MODE 01</span>
+              <div class="w-12 h-12 rounded-xl bg-purewhite border-[3px] border-inkblack flex items-center justify-center shadow-neo-sm">
+                <i data-lucide="camera" class="w-6 h-6 text-inkblack stroke-[2.5]"></i>
+              </div>
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-black text-inkblack">Image to Prompt Generator</h2>
+            <p class="text-charcoal font-medium leading-relaxed">
+              Upload any photograph, illustration, or 3D render. Our vision engine dissects subject anatomy, environment, lighting direction & intensity, camera optics, textures, and color grading into an 80+ word prompt plus strict JSON.
+            </p>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">Aspect Ratio Selector</span>
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">10 Visual Breakdown Cards</span>
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">Midjourney / Flux / SDXL Ready</span>
+            </div>
+          </div>
+          <button onclick="navigateTo('image')" class="neo-btn bg-purewhite hover:bg-softmint w-full py-3.5 px-5 text-base flex items-center justify-center gap-2">
+            <span>Open Image Analyzer</span>
+            <i data-lucide="arrow-right" class="w-5 h-5 stroke-[2.5]"></i>
+          </button>
+        </div>
+
+        <!-- Mode 2 Card: Video to Prompt -->
+        <div class="neo-card neo-card-hover bg-mintblue p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 bg-purewhite border-2 border-inkblack rounded-lg font-mono text-xs font-bold shadow-neo-sm">MODE 02</span>
+              <div class="w-12 h-12 rounded-xl bg-purewhite border-[3px] border-inkblack flex items-center justify-center shadow-neo-sm">
+                <i data-lucide="film" class="w-6 h-6 text-inkblack stroke-[2.5]"></i>
+              </div>
+            </div>
+            <h2 class="font-display text-xl sm:text-2xl font-black text-inkblack">Video to Prompt Generator</h2>
+            <p class="text-charcoal font-medium leading-relaxed">
+              Segmented Cinematic Mode automatically detects total video duration, slices footage into 8-second segments (including final partial clips), extracts 3 keyframes per segment, and builds continuous 12-attribute prompts for Sora, Veo, Runway & Kling.
+            </p>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">Auto 8s Segmentation</span>
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">3 Keyframes / Segment</span>
+              <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-md text-xs font-bold">Cinematic Continuity</span>
+            </div>
+          </div>
+          <button onclick="navigateTo('video')" class="neo-btn bg-purewhite hover:bg-softmint w-full py-3.5 px-5 text-base flex items-center justify-center gap-2">
+            <span>Open Segmented Video Studio</span>
+            <i data-lucide="arrow-right" class="w-5 h-5 stroke-[2.5]"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Vercel Deployment Guide Banner -->
+      <div class="neo-card bg-lavender p-6 sm:p-8 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purewhite border-2 border-inkblack flex items-center justify-center shadow-neo-sm shrink-0">
+            <i data-lucide="upload-cloud" class="w-5 h-5 stroke-[2.5]"></i>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-black text-inkblack">Deploying to Vercel (.vercel.app)</h3>
+            <p class="text-xs sm:text-sm text-charcoal/85">Follow these simple steps to host this web app on your custom Vercel domain.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-medium text-xs sm:text-sm">
+          <div class="bg-purewhite border-2 border-inkblack rounded-xl p-4 shadow-neo-sm space-y-2">
+            <div class="font-display font-bold text-inkblack flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-apricot border border-inkblack flex items-center justify-center text-xs">1</span> Push to GitHub</div>
+            <p class="text-charcoal/80">Upload <code class="bg-cream px-1 rounded font-mono">index.html</code> and <code class="bg-cream px-1 rounded font-mono">vercel.json</code> to a new GitHub repository.</p>
+          </div>
+          <div class="bg-purewhite border-2 border-inkblack rounded-xl p-4 shadow-neo-sm space-y-2">
+            <div class="font-display font-bold text-inkblack flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-mintblue border border-inkblack flex items-center justify-center text-xs">2</span> Import on Vercel</div>
+            <p class="text-charcoal/80">Log into <a href="https://vercel.com" target="_blank" class="underline font-bold">Vercel.com</a>, click <strong>Add New Project</strong>, and select your GitHub repository.</p>
+          </div>
+          <div class="bg-purewhite border-2 border-inkblack rounded-xl p-4 shadow-neo-sm space-y-2">
+            <div class="font-display font-bold text-inkblack flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-softmint border border-inkblack flex items-center justify-center text-xs">3</span> Instant Deploy</div>
+            <p class="text-charcoal/80">Vercel automatically detects the static setup via <code class="bg-cream px-1 rounded font-mono">vercel.json</code> and publishes your app to <code class="bg-cream px-1 rounded font-mono">*.vercel.app</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent History Preview Strip -->
+      <div class="neo-card bg-purewhite p-6 sm:p-8 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-lavender border-2 border-inkblack flex items-center justify-center shadow-neo-sm">
+              <i data-lucide="history" class="w-5 h-5 stroke-[2.5]"></i>
+            </div>
+            <div>
+              <h3 class="font-display text-lg sm:text-xl font-black text-inkblack">Recent Studio Sessions</h3>
+              <p class="text-xs sm:text-sm text-charcoal/80">Saved automatically in your browser's local vault</p>
+            </div>
+          </div>
+          <button onclick="navigateTo('history')" class="neo-btn-sm bg-lavender px-4 py-2 text-sm flex items-center gap-2">
+            <span>View Full Archive</span>
+            <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
+          </button>
+        </div>
+        <div id="home-recent-history" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: IMAGE TO PROMPT GENERATOR ==================== -->
+    <section id="view-image" class="hidden space-y-8 animate-card-in">
+      <!-- Mode Banner -->
+      <div class="neo-card bg-apricot p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-purewhite border-2 border-inkblack rounded-lg text-xs font-mono font-bold shadow-neo-sm">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> IMAGE TO PROMPT GENERATOR
+          </div>
+          <h1 class="font-display text-2xl sm:text-3xl font-black text-inkblack">Deep Visual Prompt Extractor</h1>
+          <p class="text-sm sm:text-base font-medium text-charcoal">Upload an image to reverse-engineer 10 photographic & artistic attributes into a production-ready prompt.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="px-3.5 py-2 bg-purewhite border-2 border-inkblack rounded-xl font-heading font-bold text-xs sm:text-sm shadow-neo-sm">
+            Strict 10-Point Schema + JSON
+          </span>
+        </div>
+      </div>
+
+      <!-- Error Alert Box (Hidden by default) -->
+      <div id="image-error-box" class="hidden neo-card bg-coralalert p-4 sm:p-5 flex items-start justify-between gap-4">
+        <div class="flex items-start gap-3">
+          <i data-lucide="alert-triangle" class="w-6 h-6 text-inkblack shrink-0 mt-0.5 stroke-[2.5]"></i>
+          <div>
+            <h4 class="font-heading font-bold text-base text-inkblack">Image Analysis Failed</h4>
+            <p id="image-error-msg" class="text-sm font-medium text-inkblack/90 mt-0.5"></p>
+          </div>
+        </div>
+        <button onclick="hideError('image')" class="neo-btn-sm bg-purewhite px-2.5 py-1 text-xs">Dismiss</button>
+      </div>
+
+      <!-- Input & Configuration Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left Column: Upload & Preview (7 cols) -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- Upload Dropzone -->
+          <div id="image-dropzone" class="dropzone-box p-8 sm:p-10 text-center cursor-pointer relative" onclick="document.getElementById('image-file-input').click()">
+            <input type="file" id="image-file-input" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="handleImageFileSelect(event)" />
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-apricot border-[3px] border-inkblack shadow-neo flex items-center justify-center mb-4">
+              <i data-lucide="upload-cloud" class="w-8 h-8 text-inkblack stroke-[2.5]"></i>
+            </div>
+            <h3 class="font-display text-lg sm:text-xl font-black text-inkblack">Drop Your Reference Image Here</h3>
+            <p class="text-sm sm:text-base text-charcoal/80 mt-1.5 font-medium">
+              or click to browse from your device (PNG, JPG, WEBP supported)
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-cream border-2 border-inkblack rounded-xl text-xs font-bold">
+              <i data-lucide="shield-check" class="w-4 h-4"></i> Client-side preview • Instant multimodal AI inspection
+            </div>
+          </div>
+
+          <!-- Image Preview Card (Shown when image uploaded) -->
+          <div id="image-preview-container" class="hidden neo-card bg-purewhite p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-inkblack pb-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="px-2.5 py-1 bg-softmint border-2 border-inkblack rounded-lg text-xs font-bold shrink-0">PREVIEW READY</span>
+                <span id="image-file-name" class="font-mono text-xs sm:text-sm font-bold truncate text-inkblack">image.png</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="document.getElementById('image-file-input').click()" class="neo-btn-sm bg-mintblue px-3 py-1.5 text-xs flex items-center gap-1.5">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Replace
+                </button>
+                <button onclick="clearImageUpload()" class="neo-btn-sm bg-coralalert px-3 py-1.5 text-xs flex items-center gap-1.5">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove
+                </button>
+              </div>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden border-[3px] border-inkblack bg-cream flex items-center justify-center max-h-[430px]">
+              <img id="image-preview-el" src="" alt="Uploaded Preview" class="max-h-[420px] w-auto object-contain" />
+            </div>
+
+            <div id="image-meta-bar" class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-charcoal/80 bg-cream px-3.5 py-2 rounded-xl border-2 border-inkblack">
+              <span id="image-dimensions">Dimensions: —</span>
+              <span id="image-filesize">Size: —</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Aspect Ratio & Action Trigger (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="neo-card bg-purewhite p-6 space-y-6">
+            <div>
+              <label class="font-display text-sm font-black uppercase tracking-wide text-inkblack flex items-center gap-2">
+                <i data-lucide="ratio" class="w-4 h-4 stroke-[2.5]"></i>
+                <span>Target Aspect Ratio</span>
+              </label>
+              <p class="text-xs text-charcoal/80 mt-1">Appends framing parameters to your generated prompt & JSON metadata.</p>
+
+              <div id="aspect-ratio-grid" class="grid grid-cols-3 gap-2.5 mt-4">
+                <button type="button" data-ar="1:1" onclick="selectAspectRatio('1:1')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-apricot text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">1:1</span>
+                  <span class="text-[10px] font-mono opacity-80">Square</span>
+                </button>
+                <button type="button" data-ar="16:9" onclick="selectAspectRatio('16:9')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-cream text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">16:9</span>
+                  <span class="text-[10px] font-mono opacity-80">Cinema</span>
+                </button>
+                <button type="button" data-ar="9:16" onclick="selectAspectRatio('9:16')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-cream text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">9:16</span>
+                  <span class="text-[10px] font-mono opacity-80">Vertical</span>
+                </button>
+                <button type="button" data-ar="4:3" onclick="selectAspectRatio('4:3')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-cream text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">4:3</span>
+                  <span class="text-[10px] font-mono opacity-80">Classic</span>
+                </button>
+                <button type="button" data-ar="3:2" onclick="selectAspectRatio('3:2')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-cream text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">3:2</span>
+                  <span class="text-[10px] font-mono opacity-80">DSLR</span>
+                </button>
+                <button type="button" data-ar="21:9" onclick="selectAspectRatio('21:9')" class="ar-btn neo-btn-sm py-2.5 px-3 text-xs sm:text-sm bg-cream text-inkblack flex flex-col items-center gap-1">
+                  <span class="font-extrabold">21:9</span>
+                  <span class="text-[10px] font-mono opacity-80">Ultrawide</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="border-t-2 border-inkblack pt-5 space-y-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-charcoal/80">10-Point Visual Inspection Checklist:</div>
+              <div class="grid grid-cols-2 gap-2 text-xs font-medium">
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Main Subject</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Secondary Elements</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Environment</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Lighting & Intensity</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Camera Angle</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Depth of Field</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Texture Details</div>
+                <div class="flex items-center gap-1.5 bg-cream px-2.5 py-1.5 rounded-lg border border-inkblack"><span class="w-2 h-2 rounded-full bg-apricot border border-inkblack"></span>Mood & Grading</div>
+              </div>
+            </div>
+
+            <button id="analyze-image-btn" onclick="runImageAnalysis()" disabled class="neo-btn bg-apricot w-full py-4 px-6 text-base sm:text-lg text-inkblack flex items-center justify-center gap-2.5">
+              <i data-lucide="wand-2" class="w-5 h-5 stroke-[2.5]"></i>
+              <span>Generate Visual Prompt</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Processing Progress Banner -->
+      <div id="image-progress-box" class="hidden neo-card bg-purewhite p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-apricot border-2 border-inkblack flex items-center justify-center animate-spin">
+              <i data-lucide="loader-2" class="w-5 h-5 stroke-[2.5]"></i>
+            </div>
+            <div>
+              <h4 id="image-progress-title" class="font-display text-base font-black text-inkblack">Analyzing Visual Composition...</h4>
+              <p id="image-progress-sub" class="text-xs sm:text-sm text-charcoal/80">Inspecting subject geometry, lighting rig, lens optics, and color palette</p>
+            </div>
+          </div>
+          <span id="image-progress-pct" class="font-mono font-bold text-sm px-3 py-1 bg-softmint border-2 border-inkblack rounded-lg">45%</span>
+        </div>
+        <div class="w-full h-4 bg-cream border-2 border-inkblack rounded-full overflow-hidden">
+          <div id="image-progress-bar" class="h-full bg-apricot transition-all duration-300" style="width: 45%"></div>
+        </div>
+      </div>
+
+      <!-- Image Analysis Results Output -->
+      <div id="image-results-section" class="hidden space-y-8">
+        <!-- Master Copy & Export Action Toolbar -->
+        <div class="neo-card bg-purewhite p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 bg-softmint border-2 border-inkblack rounded-lg font-mono text-xs font-bold shadow-neo-sm">ANALYSIS COMPLETE</span>
+            <span class="font-heading font-bold text-sm text-inkblack">Export & Copy Suite</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="copyImageAll()" class="neo-btn-sm bg-apricot px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy-check" class="w-4 h-4"></i> Copy All
+            </button>
+            <button onclick="downloadCurrentImage('txt')" class="neo-btn-sm bg-mintblue px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="file-text" class="w-4 h-4"></i> .TXT
+            </button>
+            <button onclick="downloadCurrentImage('json')" class="neo-btn-sm bg-lavender px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="braces" class="w-4 h-4"></i> .JSON
+            </button>
+            <button onclick="downloadCurrentImage('pdf')" class="neo-btn-sm bg-softmint px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="file-down" class="w-4 h-4"></i> .PDF
+            </button>
+            <button onclick="downloadCurrentImage('all')" class="neo-btn-sm bg-purewhite hover:bg-cream px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4"></i> Download All
+            </button>
+          </div>
+        </div>
+
+        <!-- STRICT SECTION 1: ---ENGLISH PROMPT--- -->
+        <div class="neo-card bg-apricot p-6 sm:p-8 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs sm:text-sm font-extrabold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg shadow-neo-sm">
+                ---ENGLISH PROMPT---
+              </span>
+              <span id="image-ar-badge" class="font-mono text-xs font-bold bg-inkblack text-purewhite px-2.5 py-1 rounded-md">--ar 1:1</span>
+            </div>
+            <button onclick="copyImageEnglishPrompt()" class="neo-btn-sm bg-purewhite hover:bg-softmint px-4 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy English Prompt
+            </button>
+          </div>
+          <div class="bg-purewhite border-[3px] border-inkblack rounded-xl p-5 shadow-neo-sm">
+            <p id="image-english-prompt-text" class="text-base sm:text-lg leading-relaxed font-medium text-inkblack select-all"></p>
+          </div>
+        </div>
+
+        <!-- 10 Animated Analysis Cards Grid -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg sm:text-xl font-black text-inkblack">10-Point Visual Attribute Breakdown</h3>
+            <span class="text-xs font-mono font-bold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg">Click any card button to copy field</span>
+          </div>
+          <div id="image-attributes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Dynamically populated 10 cards -->
+          </div>
+        </div>
+
+        <!-- STRICT SECTION 2: ---JSON OUTPUT--- -->
+        <div class="neo-card bg-lavender p-6 sm:p-8 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs sm:text-sm font-extrabold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg shadow-neo-sm">
+                ---JSON OUTPUT---
+              </span>
+              <button onclick="toggleJsonCollapse('image-json-body', 'image-json-toggle-icon')" class="neo-btn-sm bg-purewhite px-3 py-1 text-xs flex items-center gap-1">
+                <i id="image-json-toggle-icon" data-lucide="chevron-up" class="w-3.5 h-3.5"></i> Toggle View
+              </button>
+            </div>
+            <button onclick="copyImageJson()" class="neo-btn-sm bg-purewhite hover:bg-softmint px-4 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy JSON
+            </button>
+          </div>
+          <div id="image-json-body" class="bg-purewhite border-[3px] border-inkblack rounded-xl p-5 shadow-neo-sm overflow-x-auto">
+            <pre id="image-json-pre" class="font-mono text-xs sm:text-sm leading-relaxed text-inkblack"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: VIDEO TO PROMPT GENERATOR ==================== -->
+    <section id="view-video" class="hidden space-y-8 animate-card-in">
+      <!-- Mode Banner -->
+      <div class="neo-card bg-mintblue p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-purewhite border-2 border-inkblack rounded-lg text-xs font-mono font-bold shadow-neo-sm">
+            <i data-lucide="clapperboard" class="w-3.5 h-3.5"></i> SEGMENTED CINEMATIC MODE
+          </div>
+          <h1 class="font-display text-2xl sm:text-3xl font-black text-inkblack">Video to Prompt Generator</h1>
+          <p class="text-sm sm:text-base font-medium text-charcoal">Automatically slices your video into 8-second segments, extracts 3 keyframes per segment, and synthesizes continuous cinematic prompts.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="px-3.5 py-2 bg-purewhite border-2 border-inkblack rounded-xl font-heading font-bold text-xs sm:text-sm shadow-neo-sm">
+            8s Intervals • 3 Keyframes / Clip
+          </span>
+        </div>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div id="video-error-box" class="hidden neo-card bg-coralalert p-4 sm:p-5 flex items-start justify-between gap-4">
+        <div class="flex items-start gap-3">
+          <i data-lucide="alert-triangle" class="w-6 h-6 text-inkblack shrink-0 mt-0.5 stroke-[2.5]"></i>
+          <div>
+            <h4 class="font-heading font-bold text-base text-inkblack">Video Processing Error</h4>
+            <p id="video-error-msg" class="text-sm font-medium text-inkblack/90 mt-0.5"></p>
+          </div>
+        </div>
+        <button onclick="hideError('video')" class="neo-btn-sm bg-purewhite px-2.5 py-1 text-xs">Dismiss</button>
+      </div>
+
+      <!-- Video Upload & Timeline Preview Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left Column: Video Upload & Player (7 cols) -->
+        <div class="lg:col-span-7 space-y-5">
+          <div id="video-dropzone" class="dropzone-box p-8 sm:p-10 text-center cursor-pointer" onclick="document.getElementById('video-file-input').click()">
+            <input type="file" id="video-file-input" accept="video/mp4,video/webm,video/quicktime,video/x-m4v" class="hidden" onchange="handleVideoFileSelect(event)" />
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-mintblue border-[3px] border-inkblack shadow-neo flex items-center justify-center mb-4">
+              <i data-lucide="video" class="w-8 h-8 text-inkblack stroke-[2.5]"></i>
+            </div>
+            <h3 class="font-display text-lg sm:text-xl font-black text-inkblack">Drop Your Video Clip Here</h3>
+            <p class="text-sm sm:text-base text-charcoal/80 mt-1.5 font-medium">
+              or click to select MP4, WebM, or MOV video file
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-cream border-2 border-inkblack rounded-xl text-xs font-bold">
+              <i data-lucide="scissors" class="w-4 h-4"></i> Automatic 8-second segment calculation & keyframe sampler
+            </div>
+          </div>
+
+          <!-- Video Preview Card -->
+          <div id="video-preview-container" class="hidden neo-card bg-purewhite p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-inkblack pb-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="px-2.5 py-1 bg-softmint border-2 border-inkblack rounded-lg text-xs font-bold shrink-0">VIDEO LOADED</span>
+                <span id="video-file-name" class="font-mono text-xs sm:text-sm font-bold truncate text-inkblack">clip.mp4</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="document.getElementById('video-file-input').click()" class="neo-btn-sm bg-mintblue px-3 py-1.5 text-xs flex items-center gap-1.5">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Replace
+                </button>
+                <button onclick="clearVideoUpload()" class="neo-btn-sm bg-coralalert px-3 py-1.5 text-xs flex items-center gap-1.5">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove
+                </button>
+              </div>
+            </div>
+
+            <div class="rounded-xl overflow-hidden border-[3px] border-inkblack bg-inkblack">
+              <video id="video-preview-el" controls playsinline muted class="w-full max-h-[380px] object-contain mx-auto"></video>
+            </div>
+
+            <!-- Detected Duration & Segment Plan Strip -->
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-cream border-2 border-inkblack rounded-xl p-2.5">
+                <div class="text-[11px] font-bold uppercase text-charcoal/70">Total Duration</div>
+                <div id="video-duration-stat" class="font-display text-base sm:text-lg font-black text-inkblack mt-0.5">0.0s</div>
+              </div>
+              <div class="bg-mintblue/50 border-2 border-inkblack rounded-xl p-2.5">
+                <div class="text-[11px] font-bold uppercase text-charcoal/70">8s Segments</div>
+                <div id="video-segments-stat" class="font-display text-base sm:text-lg font-black text-inkblack mt-0.5">0</div>
+              </div>
+              <div class="bg-apricot/50 border-2 border-inkblack rounded-xl p-2.5">
+                <div class="text-[11px] font-bold uppercase text-charcoal/70">Total Keyframes</div>
+                <div id="video-keyframes-stat" class="font-display text-base sm:text-lg font-black text-inkblack mt-0.5">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Segmentation Blueprint & Trigger (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="neo-card bg-purewhite p-6 space-y-5">
+            <div>
+              <h3 class="font-display text-base font-black uppercase tracking-wide text-inkblack flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 stroke-[2.5]"></i>
+                <span>Segment Timeline Blueprint</span>
+              </h3>
+              <p class="text-xs text-charcoal/80 mt-1">
+                Each 8-second window extracts 3 temporal keyframes (start, midpoint, end) to track motion progression and camera movement.
+              </p>
+            </div>
+
+            <div id="video-segment-plan-list" class="space-y-2 max-h-[240px] overflow-y-auto pr-1">
+              <div class="bg-cream border-2 border-dashed border-inkblack rounded-xl p-4 text-center text-xs font-medium text-charcoal/75">
+                Upload a video to auto-detect duration and preview segment windows.
+              </div>
+            </div>
+
+            <div class="border-t-2 border-inkblack pt-4 space-y-2">
+              <div class="text-xs font-bold uppercase tracking-wider text-charcoal/80">12 Cinematic Fields Per Segment:</div>
+              <p class="text-xs text-charcoal/85 leading-relaxed">
+                Main Subject, Action Progression, Secondary Elements, Environment, Lighting, Camera Angle, Camera Movement, Depth of Field, Visual Texture, Cinematic Style, Emotional Tone & Color Grading.
+              </p>
+            </div>
+
+            <button id="analyze-video-btn" onclick="runVideoAnalysis()" disabled class="neo-btn bg-mintblue w-full py-4 px-6 text-base sm:text-lg text-inkblack flex items-center justify-center gap-2.5">
+              <i data-lucide="film" class="w-5 h-5 stroke-[2.5]"></i>
+              <span>Extract Keyframes & Analyze</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Processing Progress Indicator -->
+      <div id="video-progress-box" class="hidden neo-card bg-purewhite p-6 space-y-4">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-mintblue border-2 border-inkblack flex items-center justify-center animate-spin">
+              <i data-lucide="loader-2" class="w-5 h-5 stroke-[2.5]"></i>
+            </div>
+            <div>
+              <h4 id="video-progress-title" class="font-display text-base font-black text-inkblack">Extracting Keyframes...</h4>
+              <p id="video-progress-sub" class="text-xs sm:text-sm text-charcoal/80">Sampling 3 high-resolution frames per 8-second window</p>
+            </div>
+          </div>
+          <span id="video-progress-pct" class="font-mono font-bold text-sm px-3 py-1 bg-softmint border-2 border-inkblack rounded-lg">15%</span>
+        </div>
+        <div class="w-full h-4 bg-cream border-2 border-inkblack rounded-full overflow-hidden">
+          <div id="video-progress-bar" class="h-full bg-mintblue transition-all duration-300" style="width: 15%"></div>
+        </div>
+      </div>
+
+      <!-- Video Analysis Results Output -->
+      <div id="video-results-section" class="hidden space-y-8">
+        <!-- Master Copy & Export Toolbar -->
+        <div class="neo-card bg-purewhite p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 bg-softmint border-2 border-inkblack rounded-lg font-mono text-xs font-bold shadow-neo-sm">SEGMENTED ANALYSIS READY</span>
+            <span id="video-result-summary-label" class="font-heading font-bold text-sm text-inkblack">0 Segments Analyzed</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="copyVideoAll()" class="neo-btn-sm bg-apricot px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy-check" class="w-4 h-4"></i> Copy All
+            </button>
+            <button onclick="downloadCurrentVideo('txt')" class="neo-btn-sm bg-mintblue px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="file-text" class="w-4 h-4"></i> .TXT
+            </button>
+            <button onclick="downloadCurrentVideo('json')" class="neo-btn-sm bg-lavender px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="braces" class="w-4 h-4"></i> .JSON
+            </button>
+            <button onclick="downloadCurrentVideo('pdf')" class="neo-btn-sm bg-softmint px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="file-down" class="w-4 h-4"></i> .PDF
+            </button>
+            <button onclick="downloadCurrentVideo('all')" class="neo-btn-sm bg-purewhite hover:bg-cream px-3.5 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4"></i> Download All
+            </button>
+          </div>
+        </div>
+
+        <!-- STRICT SECTION 1: ---ENGLISH PROMPTS--- -->
+        <div class="neo-card bg-mintblue p-6 sm:p-8 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span class="font-mono text-xs sm:text-sm font-extrabold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg shadow-neo-sm">
+              ---ENGLISH PROMPTS---
+            </span>
+            <button onclick="copyVideoEnglishPrompts()" class="neo-btn-sm bg-purewhite hover:bg-softmint px-4 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy All Segment Prompts
+            </button>
+          </div>
+          <div id="video-english-prompts-list" class="space-y-4">
+            <!-- Populated per segment -->
+          </div>
+        </div>
+
+        <!-- Per-Segment Detailed Cinematic Cards with Extracted Keyframes -->
+        <div class="space-y-5">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg sm:text-xl font-black text-inkblack">Segment-by-Segment Cinematic Breakdown</h3>
+            <span class="text-xs font-mono font-bold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg">3 Keyframes + 12 Fields / Segment</span>
+          </div>
+          <div id="video-segments-detail-container" class="space-y-6">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- STRICT SECTION 2: ---JSON OUTPUT--- -->
+        <div class="neo-card bg-lavender p-6 sm:p-8 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span class="font-mono text-xs sm:text-sm font-extrabold bg-purewhite border-2 border-inkblack px-3 py-1 rounded-lg shadow-neo-sm">
+                ---JSON OUTPUT---
+              </span>
+              <button onclick="toggleJsonCollapse('video-json-body', 'video-json-toggle-icon')" class="neo-btn-sm bg-purewhite px-3 py-1 text-xs flex items-center gap-1">
+                <i id="video-json-toggle-icon" data-lucide="chevron-up" class="w-3.5 h-3.5"></i> Toggle View
+              </button>
+            </div>
+            <button onclick="copyVideoJson()" class="neo-btn-sm bg-purewhite hover:bg-softmint px-4 py-2 text-xs sm:text-sm flex items-center gap-1.5">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy JSON
+            </button>
+          </div>
+          <div id="video-json-body" class="bg-purewhite border-[3px] border-inkblack rounded-xl p-5 shadow-neo-sm overflow-x-auto">
+            <pre id="video-json-pre" class="font-mono text-xs sm:text-sm leading-relaxed text-inkblack"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: HISTORY ARCHIVE ==================== -->
+    <section id="view-history" class="hidden space-y-8 animate-card-in">
+      <div class="neo-card bg-lavender p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-purewhite border-2 border-inkblack rounded-lg text-xs font-mono font-bold shadow-neo-sm">
+            <i data-lucide="database" class="w-3.5 h-3.5"></i> PERSISTENT PROMPT VAULT
+          </div>
+          <h1 class="font-display text-2xl sm:text-3xl font-black text-inkblack">Analysis History</h1>
+          <p class="text-sm sm:text-base font-medium text-charcoal">Reopen, copy, export, or manage your previous Image and Segmented Video prompt analyses.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="history-filter-select" onchange="renderHistoryView()" class="neo-btn-sm bg-purewhite px-3.5 py-2.5 text-xs sm:text-sm font-bold focus:outline-none">
+            <option value="all">All Modes</option>
+            <option value="image">Image Prompts Only</option>
+            <option value="video">Video Prompts Only</option>
+          </select>
+          <button onclick="confirmClearAllHistory()" class="neo-btn-sm bg-coralalert px-3.5 py-2.5 text-xs sm:text-sm flex items-center gap-1.5">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Clear All
+          </button>
+        </div>
+      </div>
+
+      <div id="history-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Populated dynamically from localStorage -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t-[3px] border-inkblack bg-purewhite mt-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm font-medium text-charcoal">
+      <div class="flex items-center gap-2 font-display font-bold text-inkblack">
+        <span class="w-3 h-3 rounded-sm bg-apricot border-2 border-inkblack"></span>
+        <span>AI PROMPT GENERATOR PRO</span>
+      </div>
+      <div class="text-center sm:text-right">
+        Light Neo-Brutalist 3D Multimodal Prompt Studio • Ready for Vercel Deployment (<code class="bg-cream px-1.5 py-0.5 rounded border border-inkblack font-mono text-xs">.vercel.app</code>)
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+  <!-- ==================== CONFIRMATION MODAL ==================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-inkblack/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="neo-card-lg bg-purewhite max-w-md w-full p-6 space-y-5 animate-card-in">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-coralalert border-2 border-inkblack flex items-center justify-center shadow-neo-sm shrink-0">
+          <i data-lucide="alert-circle" class="w-6 h-6 text-inkblack stroke-[2.5]"></i>
+        </div>
+        <div>
+          <h3 id="modal-title" class="font-display text-lg font-black text-inkblack">Confirm Action</h3>
+          <p id="modal-body" class="text-sm text-charcoal/85 mt-0.5">Are you sure you want to proceed?</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button onclick="closeConfirmModal()" class="neo-btn-sm bg-cream px-4 py-2.5 text-sm">Cancel</button>
+        <button id="modal-confirm-btn" class="neo-btn-sm bg-coralalert px-4 py-2.5 text-sm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offscreen Canvas for Keyframe Extraction -->
+  <canvas id="keyframe-canvas" class="hidden"></canvas>
+
+  <!-- ==================== APPLICATION JAVASCRIPT ==================== -->
+  <script>
+    // =========================================================================
+    // 1. STATE & CONFIGURATION
+    // =========================================================================
+    const apiKey = ""; // Runtime-injected Gemini API key
+    const GEMINI_MODEL = "gemini-3-flash-preview";
+    const STORAGE_KEY = "ai_prompt_generator_pro_history_v1";
+
+    const state = {
+      currentView: "home",
+      image: {
+        file: null,
+        base64: null,
+        mimeType: null,
+        dataUrl: null,
+        thumbnailUrl: null,
+        aspectRatio: "1:1",
+        result: null, // { englishPrompt, jsonOutput }
+      },
+      video: {
+        file: null,
+        objectUrl: null,
+        duration: 0,
+        segmentPlan: [], // [{ segmentNumber, start, end, timeRange }]
+        extractedSegments: [], // [{ segmentNumber, timeRange, frames: [dataUrl1, dataUrl2, dataUrl3] }]
+        result: null, // { englishPromptsText, jsonOutput }
+      },
+      history: [],
+      pendingModalAction: null,
+    };
+
+    const IMAGE_FIELD_META = [
+      { key: "main_subject", label: "1. Main Subject", icon: "user-check", color: "bg-purewhite" },
+      { key: "secondary_elements", label: "2. Secondary Elements", icon: "layers", color: "bg-cream" },
+      { key: "environment", label: "3. Environment", icon: "mountain-snow", color: "bg-cream" },
+      { key: "lighting", label: "4. Lighting (Type + Direction + Intensity)", icon: "sun", color: "bg-purewhite" },
+      { key: "camera_angle", label: "5. Camera Angle", icon: "compass", color: "bg-purewhite" },
+      { key: "depth_of_field", label: "6. Depth of Field", icon: "aperture", color: "bg-cream" },
+      { key: "texture_details", label: "7. Texture Details", icon: "grid", color: "bg-cream" },
+      { key: "mood", label: "8. Mood & Atmosphere", icon: "smile", color: "bg-purewhite" },
+      { key: "color_grading", label: "9. Color Grading", icon: "palette", color: "bg-purewhite" },
+      { key: "style_reference", label: "10. Artistic / Cinematic Style", icon: "paintbrush", color: "bg-cream" },
+    ];
+
+    const VIDEO_FIELD_META = [
+      { key: "main_subject", label: "1. Main Subject" },
+      { key: "action_progression", label: "2. Action Progression" },
+      { key: "secondary_elements", label: "3. Secondary Elements" },
+      { key: "environment_details", label: "4. Environment Details" },
+      { key: "lighting", label: "5. Lighting (Type + Direction + Intensity)" },
+      { key: "camera_angle", label: "6. Camera Angle" },
+      { key: "camera_movement", label: "7. Camera Movement" },
+      { key: "depth_of_field", label: "8. Depth of Field" },
+      { key: "visual_texture", label: "9. Visual Texture" },
+      { key: "cinematic_style", label: "10. Cinematic Style" },
+      { key: "emotional_tone", label: "11. Emotional Tone" },
+      { key: "color_grading", label: "12. Color Grading" },
+    ];
+
+    // =========================================================================
+    // 2. INITIALIZATION & NAVIGATION
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      loadHistoryFromStorage();
+      setupDragAndDrop();
+      navigateTo("home");
+      lucide.createIcons();
+    });
+
+    function navigateTo(viewName) {
+      state.currentView = viewName;
+      const views = ["home", "image", "video", "history"];
+      views.forEach((v) => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.toggle("hidden", v !== viewName);
+
+        const navBtn = document.getElementById(`nav-${v}`);
+        const mNavBtn = document.getElementById(`mnav-${v}`);
+        const activeBg = v === "image" ? "bg-apricot" : v === "video" ? "bg-mintblue" : v === "history" ? "bg-lavender" : "bg-softmint";
+
+        [navBtn, mNavBtn].forEach((btn) => {
+          if (!btn) return;
+          btn.classList.remove("bg-apricot", "bg-mintblue", "bg-lavender", "bg-softmint", "bg-purewhite");
+          if (v === viewName) {
+            btn.classList.add(activeBg);
+          } else {
+            btn.classList.add("bg-purewhite");
+          }
+        });
+      });
+
+      if (viewName === "home") renderHomeRecentHistory();
+      if (viewName === "history") renderHistoryView();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      lucide.createIcons();
+    }
+
+    function toggleMobileMenu(forceState) {
+      const menu = document.getElementById("mobile-menu");
+      const icon = document.getElementById("mobile-menu-icon");
+      const shouldOpen = typeof forceState === "boolean" ? forceState : menu.classList.contains("hidden");
+      menu.classList.toggle("hidden", !shouldOpen);
+      icon.setAttribute("data-lucide", shouldOpen ? "x" : "menu");
+      lucide.createIcons();
+    }
+
+    function setupDragAndDrop() {
+      const imgDrop = document.getElementById("image-dropzone");
+      ["dragenter", "dragover"].forEach((evt) => {
+        imgDrop.addEventListener(evt, (e) => {
+          e.preventDefault();
+          imgDrop.classList.add("drag-active");
+        });
+      });
+      ["dragleave", "drop"].forEach((evt) => {
+        imgDrop.addEventListener(evt, (e) => {
+          e.preventDefault();
+          imgDrop.classList.remove("drag-active");
+        });
+      });
+      imgDrop.addEventListener("drop", (e) => {
+        const file = e.dataTransfer?.files?.[0];
+        if (file) processImageFile(file);
+      });
+
+      const vidDrop = document.getElementById("video-dropzone");
+      ["dragenter", "dragover"].forEach((evt) => {
+        vidDrop.addEventListener(evt, (e) => {
+          e.preventDefault();
+          vidDrop.classList.add("drag-active");
+        });
+      });
+      ["dragleave", "drop"].forEach((evt) => {
+        vidDrop.addEventListener(evt, (e) => {
+          e.preventDefault();
+          vidDrop.classList.remove("drag-active");
+        });
+      });
+      vidDrop.addEventListener("drop", (e) => {
+        const file = e.dataTransfer?.files?.[0];
+        if (file) processVideoFile(file);
+      });
+    }
+
+    // =========================================================================
+    // 3. GEMINI MULTIMODAL API HELPER (WITH EXPONENTIAL BACKOFF)
+    // =========================================================================
+    async function callGeminiStructured({ parts, systemInstruction, responseSchema }) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ role: "user", parts }],
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema,
+          temperature: 0.4,
+        },
+      };
+
+      const maxRetries = 4;
+      let delay = 1000;
+
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!res.ok) {
+            const errText = await res.text();
+            if ((res.status === 429 || res.status >= 500) && attempt < maxRetries) {
+              await new Promise((r) => setTimeout(r, delay));
+              delay *= 2;
+              continue;
+            }
+            throw new Error(`API Error (${res.status}): ${errText.slice(0, 200)}`);
+          }
+
+          const data = await res.json();
+          const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!rawText) {
+            throw new Error("Empty response received from AI visual engine.");
+          }
+
+          const cleanJsonText = rawText.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+          return JSON.parse(cleanJsonText);
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+          await new Promise((r) => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    // =========================================================================
+    // 4. IMAGE TO PROMPT GENERATOR LOGIC
+    // =========================================================================
+    function selectAspectRatio(ar) {
+      state.image.aspectRatio = ar;
+      document.querySelectorAll(".ar-btn").forEach((btn) => {
+        const isSelected = btn.getAttribute("data-ar") === ar;
+        btn.classList.toggle("bg-apricot", isSelected);
+        btn.classList.toggle("bg-cream", !isSelected);
+      });
+
+      // Update live output if result already exists
+      if (state.image.result) {
+        const basePrompt = state.image.result.rawFullPrompt;
+        const updatedPrompt = appendAspectRatio(basePrompt, ar);
+        state.image.result.englishPrompt = updatedPrompt;
+        state.image.result.jsonOutput.full_prompt = updatedPrompt;
+        renderImageResults();
+      }
+    }
+
+    function appendAspectRatio(promptText, ar) {
+      const stripped = promptText.replace(/\s*--ar\s+\d+:\d+\s*$/i, "").trim();
+      return `${stripped} --ar ${ar}`;
+    }
+
+    function handleImageFileSelect(event) {
+      const file = event.target.files?.[0];
+      if (file) processImageFile(file);
+    }
+
+    function processImageFile(file) {
+      hideError("image");
+      if (!file.type.startsWith("image/")) {
+        showError("image", "Please select a valid image file (PNG, JPG, WEBP, or GIF).");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        const img = new Image();
+        img.onload = () => {
+          // Create compressed JPEG base64 for fast API payload + thumbnail
+          const canvas = document.createElement("canvas");
+          const maxDim = 1280;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const optimizedDataUrl = canvas.toDataURL("image/jpeg", 0.88);
+
+          // Thumbnail for history
+          const thumbCanvas = document.createElement("canvas");
+          thumbCanvas.width = 320;
+          thumbCanvas.height = Math.round((320 * h) / w);
+          thumbCanvas.getContext("2d").drawImage(img, 0, 0, thumbCanvas.width, thumbCanvas.height);
+
+          state.image.file = file;
+          state.image.dataUrl = dataUrl;
+          state.image.base64 = optimizedDataUrl.split(",")[1];
+          state.image.mimeType = "image/jpeg";
+          state.image.thumbnailUrl = thumbCanvas.toDataURL("image/jpeg", 0.72);
+
+          document.getElementById("image-preview-el").src = dataUrl;
+          document.getElementById("image-file-name").textContent = file.name;
+          document.getElementById("image-dimensions").textContent = `Dimensions: ${img.width} × ${img.height}px`;
+          document.getElementById("image-filesize").textContent = `Size: ${(file.size / 1024).toFixed(1)} KB`;
+
+          document.getElementById("image-dropzone").classList.add("hidden");
+          document.getElementById("image-preview-container").classList.remove("hidden");
+          document.getElementById("analyze-image-btn").disabled = false;
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearImageUpload() {
+      state.image.file = null;
+      state.image.base64 = null;
+      state.image.dataUrl = null;
+      state.image.result = null;
+      document.getElementById("image-file-input").value = "";
+      document.getElementById("image-preview-container").classList.add("hidden");
+      document.getElementById("image-dropzone").classList.remove("hidden");
+      document.getElementById("image-results-section").classList.add("hidden");
+      document.getElementById("analyze-image-btn").disabled = true;
+      hideError("image");
+    }
+
+    async function runImageAnalysis() {
+      if (!state.image.base64) {
+        showError("image", "Please upload an image before running analysis.");
+        return;
+      }
+
+      hideError("image");
+      const btn = document.getElementById("analyze-image-btn");
+      btn.disabled = true;
+
+      const progBox = document.getElementById("image-progress-box");
+      const progBar = document.getElementById("image-progress-bar");
+      const progPct = document.getElementById("image-progress-pct");
+      const progTitle = document.getElementById("image-progress-title");
+      const progSub = document.getElementById("image-progress-sub");
+
+      progBox.classList.remove("hidden");
+      progBar.style.width = "30%";
+      progPct.textContent = "30%";
+      progTitle.textContent = "Inspecting Visual Composition...";
+      progSub.textContent = "Uploading visual frame to multimodal vision model...";
+
+      const progressTimer = setInterval(() => {
+        const current = parseInt(progBar.style.width, 10);
+        if (current < 88) {
+          const next = current + 7;
+          progBar.style.width = `${next}%`;
+          progPct.textContent = `${next}%`;
+        }
+      }, 650);
+
+      try {
+        const schema = {
+          type: "OBJECT",
+          properties: {
+            main_subject: { type: "STRING" },
+            secondary_elements: { type: "STRING" },
+            environment: { type: "STRING" },
+            lighting: { type: "STRING" },
+            camera_angle: { type: "STRING" },
+            depth_of_field: { type: "STRING" },
+            texture_details: { type: "STRING" },
+            mood: { type: "STRING" },
+            color_grading: { type: "STRING" },
+            style_reference: { type: "STRING" },
+            full_prompt: { type: "STRING" },
+            quality_tags: { type: "STRING" },
+          },
+          required: [
+            "main_subject",
+            "secondary_elements",
+            "environment",
+            "lighting",
+            "camera_angle",
+            "depth_of_field",
+            "texture_details",
+            "mood",
+            "color_grading",
+            "style_reference",
+            "full_prompt",
+            "quality_tags",
+          ],
+        };
+
+        const systemInstruction = `You are a master cinematography director, commercial photographer, and AI prompt engineer.
+Analyze the provided image with extreme visual precision.
+STRICT RULES:
+1. Every single field MUST be a rich, realistic descriptive string containing AT LEAST 8 to 15 words. Never leave any field empty or vague.
+2. If an element is subtle or partially out of frame, infer logically and realistically from visual cues.
+3. "full_prompt" MUST be a single cohesive, standalone paragraph of AT LEAST 85 words optimized for Midjourney, Flux, DALL-E 3, and Stable Diffusion. Do NOT include markdown, bullet points, or commentary inside "full_prompt".
+4. "quality_tags" MUST be "8K, ultra-detailed, hyperrealistic, professional lighting, sharp focus".`;
+
+        const promptText = `Perform a complete 10-attribute visual decomposition of this image and synthesize an 85+ word standalone prompt tailored for aspect ratio ${state.image.aspectRatio}.`;
+
+        const analyzed = await callGeminiStructured({
+          parts: [
+            { text: promptText },
+            { inlineData: { mimeType: state.image.mimeType, data: state.image.base64 } },
+          ],
+          systemInstruction,
+          responseSchema: schema,
+        });
+
+        clearInterval(progressTimer);
+        progBar.style.width = "100%";
+        progPct.textContent = "100%";
+
+        // Enforce strict quality_tags & aspect ratio on full_prompt
+        const rawFull = (analyzed.full_prompt || "").replace(/[*#`]/g, "").trim();
+        const finalFullPrompt = appendAspectRatio(rawFull, state.image.aspectRatio);
+
+        const strictJson = {
+          main_subject: analyzed.main_subject,
+          secondary_elements: analyzed.secondary_elements,
+          environment: analyzed.environment,
+          lighting: analyzed.lighting,
+          camera_angle: analyzed.camera_angle,
+          depth_of_field: analyzed.depth_of_field,
+          texture_details: analyzed.texture_details,
+          mood: analyzed.mood,
+          color_grading: analyzed.color_grading,
+          style_reference: analyzed.style_reference,
+          full_prompt: finalFullPrompt,
+          quality_tags: "8K, ultra-detailed, hyperrealistic, professional lighting, sharp focus",
+        };
+
+        state.image.result = {
+          rawFullPrompt: rawFull,
+          englishPrompt: finalFullPrompt,
+          jsonOutput: strictJson,
+        };
+
+        // Save to persistent history
+        saveToHistory({
+          id: `img_${Date.now()}`,
+          mode: "image",
+          title: state.image.file?.name || "Image Analysis",
+          timestamp: new Date().toISOString(),
+          thumbnail: state.image.thumbnailUrl,
+          aspectRatio: state.image.aspectRatio,
+          result: state.image.result,
+        });
+
+        renderImageResults();
+        setTimeout(() => {
+          progBox.classList.add("hidden");
+          document.getElementById("image-results-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 350);
+      } catch (err) {
+        clearInterval(progressTimer);
+        progBox.classList.add("hidden");
+        showError("image", err.message || "Failed to analyze image. Please try again.");
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderImageResults() {
+      if (!state.image.result) return;
+      const { englishPrompt, jsonOutput } = state.image.result;
+
+      document.getElementById("image-ar-badge").textContent = `--ar ${state.image.aspectRatio}`;
+      document.getElementById("image-english-prompt-text").textContent = englishPrompt;
+
+      // Render 10 individual attribute cards
+      const grid = document.getElementById("image-attributes-grid");
+      grid.innerHTML = IMAGE_FIELD_META.map((item) => {
+        const val = jsonOutput[item.key] || "";
+        return `
+          <div class="neo-card ${item.color} p-5 flex flex-col justify-between gap-3 animate-card-in">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-apricot border-2 border-inkblack flex items-center justify-center shrink-0">
+                  <i data-lucide="${item.icon}" class="w-4 h-4 text-inkblack stroke-[2.5]"></i>
+                </span>
+                <h4 class="font-heading font-bold text-sm sm:text-base text-inkblack">${escapeHtml(item.label)}</h4>
+              </div>
+              <button onclick="copyFieldValue('image', '${item.key}', '${escapeHtml(item.label)}')" class="neo-btn-sm bg-purewhite hover:bg-softmint px-2.5 py-1 text-xs flex items-center gap-1 shrink-0" title="Copy ${escapeHtml(item.label)}">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+              </button>
+            </div>
+            <p class="text-sm text-charcoal leading-relaxed font-medium">${escapeHtml(val)}</p>
+          </div>
+        `;
+      }).join("");
+
+      // Render formatted JSON
+      document.getElementById("image-json-pre").innerHTML = syntaxHighlightJson(jsonOutput);
+      document.getElementById("image-results-section").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 5. VIDEO TO PROMPT GENERATOR (SEGMENTED CINEMATIC MODE)
+    // =========================================================================
+    function handleVideoFileSelect(event) {
+      const file = event.target.files?.[0];
+      if (file) processVideoFile(file);
+    }
+
+    function processVideoFile(file) {
+      hideError("video");
+      if (!file.type.startsWith("video/")) {
+        showError("video", "Please upload a valid video file (MP4, WebM, or MOV).");
+        return;
+      }
+
+      if (state.video.objectUrl) {
+        URL.revokeObjectURL(state.video.objectUrl);
+      }
+
+      const url = URL.createObjectURL(file);
+      const videoEl = document.getElementById("video-preview-el");
+      videoEl.src = url;
+
+      videoEl.onloadedmetadata = () => {
+        const dur = videoEl.duration;
+        if (!dur || !isFinite(dur) || dur <= 0) {
+          showError("video", "Could not detect video duration. Please try a standard MP4/WebM file.");
+          return;
+        }
+
+        const totalSeconds = Math.round(dur * 10) / 10;
+        const segmentLength = 8;
+        const numSegments = Math.max(1, Math.ceil(totalSeconds / segmentLength));
+        const plan = [];
+
+        for (let i = 0; i < numSegments; i++) {
+          const start = i * segmentLength;
+          const end = Math.min(totalSeconds, (i + 1) * segmentLength);
+          const startLabel = Number.isInteger(start) ? start : start.toFixed(1);
+          const endLabel = Number.isInteger(end) ? end : end.toFixed(1);
+          plan.push({
+            segmentNumber: i + 1,
+            start,
+            end,
+            timeRange: `${startLabel}-${endLabel}`,
+          });
+        }
+
+        state.video.file = file;
+        state.video.objectUrl = url;
+        state.video.duration = totalSeconds;
+        state.video.segmentPlan = plan;
+        state.video.extractedSegments = [];
+        state.video.result = null;
+
+        document.getElementById("video-file-name").textContent = file.name;
+        document.getElementById("video-duration-stat").textContent = `${totalSeconds}s`;
+        document.getElementById("video-segments-stat").textContent = `${plan.length}`;
+        document.getElementById("video-keyframes-stat").textContent = `${plan.length * 3}`;
+
+        const planList = document.getElementById("video-segment-plan-list");
+        planList.innerHTML = plan.map((seg) => `
+          <div class="flex items-center justify-between bg-cream border-2 border-inkblack rounded-xl px-3.5 py-2 text-xs font-bold">
+            <span class="flex items-center gap-2">
+              <span class="px-2 py-0.5 bg-mintblue border border-inkblack rounded-md font-mono">SEG ${seg.segmentNumber}</span>
+              <span>${seg.timeRange}s</span>
+            </span>
+            <span class="font-mono text-charcoal/75">3 Keyframes</span>
+          </div>
+        `).join("");
+
+        document.getElementById("video-dropzone").classList.add("hidden");
+        document.getElementById("video-preview-container").classList.remove("hidden");
+        document.getElementById("video-results-section").classList.add("hidden");
+        document.getElementById("analyze-video-btn").disabled = false;
+        lucide.createIcons();
+      };
+
+      videoEl.onerror = () => {
+        showError("video", "Browser could not decode this video format. Try MP4 (H.264) or WebM.");
+      };
+    }
+
+    function clearVideoUpload() {
+      if (state.video.objectUrl) {
+        URL.revokeObjectURL(state.video.objectUrl);
+      }
+      state.video.file = null;
+      state.video.objectUrl = null;
+      state.video.duration = 0;
+      state.video.segmentPlan = [];
+      state.video.extractedSegments = [];
+      state.video.result = null;
+
+      document.getElementById("video-file-input").value = "";
+      document.getElementById("video-preview-el").src = "";
+      document.getElementById("video-preview-container").classList.add("hidden");
+      document.getElementById("video-dropzone").classList.remove("hidden");
+      document.getElementById("video-results-section").classList.add("hidden");
+      document.getElementById("analyze-video-btn").disabled = true;
+      document.getElementById("video-segment-plan-list").innerHTML = `
+        <div class="bg-cream border-2 border-dashed border-inkblack rounded-xl p-4 text-center text-xs font-medium text-charcoal/75">
+          Upload a video to auto-detect duration and preview segment windows.
+        </div>`;
+      hideError("video");
+    }
+
+    function seekAndCaptureFrame(videoEl, canvas, ctx, targetTime) {
+      return new Promise((resolve, reject) => {
+        const clampedTime = Math.max(0.05, Math.min(targetTime, Math.max(0.1, videoEl.duration - 0.08)));
+
+        const onSeeked = () => {
+          videoEl.removeEventListener("seeked", onSeeked);
+          try {
+            const maxW = 768;
+            const scale = videoEl.videoWidth > maxW ? maxW / videoEl.videoWidth : 1;
+            canvas.width = Math.round(videoEl.videoWidth * scale);
+            canvas.height = Math.round(videoEl.videoHeight * scale);
+            ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+            resolve(dataUrl);
+          } catch (err) {
+            reject(err);
+          }
+        };
+
+        videoEl.addEventListener("seeked", onSeeked, { once: true });
+        videoEl.currentTime = clampedTime;
+      });
+    }
+
+    async function extractAllSegmentKeyframes(onProgress) {
+      const videoEl = document.createElement("video");
+      videoEl.src = state.video.objectUrl;
+      videoEl.muted = true;
+      videoEl.playsInline = true;
+      videoEl.preload = "auto";
+
+      await new Promise((resolve, reject) => {
+        videoEl.onloadeddata = () => resolve();
+        videoEl.onerror = () => reject(new Error("Unable to initialize video frame sampler."));
+      });
+
+      const canvas = document.getElementById("keyframe-canvas");
+      const ctx = canvas.getContext("2d");
+      const extracted = [];
+      const totalFrames = state.video.segmentPlan.length * 3;
+      let capturedCount = 0;
+
+      for (const seg of state.video.segmentPlan) {
+        const span = Math.max(0.2, seg.end - seg.start);
+        const timestamps = [
+          seg.start + span * 0.15,
+          seg.start + span * 0.50,
+          seg.start + span * 0.85,
+        ];
+
+        const frames = [];
+        for (const t of timestamps) {
+          const frameDataUrl = await seekAndCaptureFrame(videoEl, canvas, ctx, t);
+          frames.push(frameDataUrl);
+          capturedCount++;
+          if (onProgress) onProgress(capturedCount, totalFrames, seg.segmentNumber);
+        }
+
+        extracted.push({
+          segmentNumber: seg.segmentNumber,
+          timeRange: seg.timeRange,
+          frames,
+        });
+      }
+
+      return extracted;
+    }
+
+    async function runVideoAnalysis() {
+      if (!state.video.objectUrl || state.video.segmentPlan.length === 0) {
+        showError("video", "Please upload a video file first.");
+        return;
+      }
+
+      hideError("video");
+      const btn = document.getElementById("analyze-video-btn");
+      btn.disabled = true;
+
+      const progBox = document.getElementById("video-progress-box");
+      const progBar = document.getElementById("video-progress-bar");
+      const progPct = document.getElementById("video-progress-pct");
+      const progTitle = document.getElementById("video-progress-title");
+      const progSub = document.getElementById("video-progress-sub");
+
+      progBox.classList.remove("hidden");
+      progBar.style.width = "8%";
+      progPct.textContent = "8%";
+      progTitle.textContent = "Step 1/2: Extracting 3 Keyframes Per Segment...";
+      progSub.textContent = "Seeking across video timeline...";
+
+      try {
+        // 1. Extract 3 actual keyframes per 8-second segment
+        const extractedSegments = await extractAllSegmentKeyframes((done, total, segNum) => {
+          const pct = Math.round(8 + (done / total) * 32); // 8% -> 40%
+          progBar.style.width = `${pct}%`;
+          progPct.textContent = `${pct}%`;
+          progSub.textContent = `Extracted frame ${done}/${total} (Segment ${segNum})...`;
+        });
+
+        state.video.extractedSegments = extractedSegments;
+
+        // 2. Analyze each segment sequentially with continuity context from previous segment
+        const segmentSchema = {
+          type: "OBJECT",
+          properties: {
+            main_subject: { type: "STRING" },
+            action_progression: { type: "STRING" },
+            secondary_elements: { type: "STRING" },
+            environment_details: { type: "STRING" },
+            lighting: { type: "STRING" },
+            camera_angle: { type: "STRING" },
+            camera_movement: { type: "STRING" },
+            depth_of_field: { type: "STRING" },
+            visual_texture: { type: "STRING" },
+            cinematic_style: { type: "STRING" },
+            emotional_tone: { type: "STRING" },
+            color_grading: { type: "STRING" },
+            full_prompt: { type: "STRING" },
+            quality_tags: { type: "STRING" },
+          },
+          required: [
+            "main_subject",
+            "action_progression",
+            "secondary_elements",
+            "environment_details",
+            "lighting",
+            "camera_angle",
+            "camera_movement",
+            "depth_of_field",
+            "visual_texture",
+            "cinematic_style",
+            "emotional_tone",
+            "color_grading",
+            "full_prompt",
+            "quality_tags",
+          ],
+        };
+
+        const systemInstruction = `You are a senior Hollywood director of photography and AI video prompt architect (Sora, Veo, Runway Gen-3, Kling).
+You are given 3 chronological keyframes (Start, Middle, End) from an 8-second (or final partial) video segment.
+STRICT RULES:
+1. Analyze visual changes across the 3 frames to accurately describe action progression and camera movement.
+2. Every single field MUST be a rich descriptive string of AT LEAST 8 words. Never leave any field empty.
+3. Maintain strict visual and narrative continuity with any previous segment summary provided.
+4. "full_prompt" MUST be a standalone cinematic paragraph of AT LEAST 85 words optimized for AI video generation models, without markdown or bullet points.
+5. "quality_tags" MUST be "4K, ultra-detailed, cinematic lighting, dynamic motion, professional color grading".`;
+
+        const analyzedSegments = [];
+        let priorContinuitySummary = "None (This is the opening segment of the video).";
+
+        for (let i = 0; i < extractedSegments.length; i++) {
+          const seg = extractedSegments[i];
+          const pct = Math.round(40 + ((i + 0.5) / extractedSegments.length) * 58);
+          progBar.style.width = `${pct}%`;
+          progPct.textContent = `${pct}%`;
+          progTitle.textContent = `Step 2/2: Analyzing Segment ${seg.segmentNumber} of ${extractedSegments.length} (${seg.timeRange}s)...`;
+          progSub.textContent = "Synthesizing motion progression, camera choreography & continuity...";
+
+          const parts = [
+            {
+              text: `Analyze Segment ${seg.segmentNumber} (Time Range: ${seg.timeRange} seconds out of ${state.video.duration}s total video duration).
+Previous Segment Continuity Context: ${priorContinuitySummary}
+Examine Frame 1 (Segment Start), Frame 2 (Segment Midpoint), and Frame 3 (Segment End) and return the complete 12-attribute cinematic breakdown + 85+ word standalone video prompt.`,
+            },
+            ...seg.frames.map((frameUrl) => ({
+              inlineData: {
+                mimeType: "image/jpeg",
+                data: frameUrl.split(",")[1],
+              },
+            })),
+          ];
+
+          const segData = await callGeminiStructured({
+            parts,
+            systemInstruction,
+            responseSchema: segmentSchema,
+          });
+
+          const cleanPrompt = (segData.full_prompt || "").replace(/[*#`]/g, "").trim();
+
+          const structuredSeg = {
+            segment_number: seg.segmentNumber,
+            time_range: seg.timeRange,
+            main_subject: segData.main_subject,
+            action_progression: segData.action_progression,
+            secondary_elements: segData.secondary_elements,
+            environment_details: segData.environment_details,
+            lighting: segData.lighting,
+            camera_angle: segData.camera_angle,
+            camera_movement: segData.camera_movement,
+            depth_of_field: segData.depth_of_field,
+            visual_texture: segData.visual_texture,
+            cinematic_style: segData.cinematic_style,
+            emotional_tone: segData.emotional_tone,
+            color_grading: segData.color_grading,
+            full_prompt: cleanPrompt,
+            quality_tags: "4K, ultra-detailed, cinematic lighting, dynamic motion, professional color grading",
+          };
+
+          analyzedSegments.push(structuredSeg);
+          priorContinuitySummary = `Segment ${seg.segmentNumber} (${seg.timeRange}s): Subject: ${segData.main_subject}. Action: ${segData.action_progression}. Environment: ${segData.environment_details}. Lighting/Style: ${segData.lighting}, ${segData.cinematic_style}.`;
+        }
+
+        progBar.style.width = "100%";
+        progPct.textContent = "100%";
+
+        const strictJson = {
+          total_duration_seconds: Math.round(state.video.duration),
+          segment_length_seconds: 8,
+          segments: analyzedSegments,
+        };
+
+        const englishPromptsText = analyzedSegments
+          .map((s) => `Segment ${s.segment_number} (${s.time_range.replace("-", "–")}s):\n${s.full_prompt}`)
+          .join("\n\n");
+
+        state.video.result = {
+          englishPromptsText,
+          jsonOutput: strictJson,
+          keyframesBySegment: extractedSegments.map((s) => s.frames),
+        };
+
+        // Save to persistent history (store first keyframe as thumbnail to keep localStorage lightweight)
+        saveToHistory({
+          id: `vid_${Date.now()}`,
+          mode: "video",
+          title: state.video.file?.name || "Segmented Video Analysis",
+          timestamp: new Date().toISOString(),
+          thumbnail: extractedSegments[0]?.frames?.[0] || null,
+          duration: state.video.duration,
+          segmentCount: analyzedSegments.length,
+          result: {
+            englishPromptsText,
+            jsonOutput: strictJson,
+          },
+        });
+
+        renderVideoResults();
+        setTimeout(() => {
+          progBox.classList.add("hidden");
+          document.getElementById("video-results-section").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 350);
+      } catch (err) {
+        progBox.classList.add("hidden");
+        showError("video", err.message || "Video segmentation or AI analysis failed.");
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderVideoResults() {
+      if (!state.video.result) return;
+      const { jsonOutput, keyframesBySegment } = state.video.result;
+      const segments = jsonOutput.segments || [];
+
+      document.getElementById("video-result-summary-label").textContent =
+        `${segments.length} Segment${segments.length === 1 ? "" : "s"} (${jsonOutput.total_duration_seconds}s Total)`;
+
+      // 1. Render Strict ---ENGLISH PROMPTS--- block
+      const engList = document.getElementById("video-english-prompts-list");
+      engList.innerHTML = segments.map((seg, idx) => `
+        <div class="bg-purewhite border-[3px] border-inkblack rounded-xl p-5 shadow-neo-sm space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-inkblack pb-2">
+            <span class="font-display text-sm sm:text-base font-black text-inkblack">
+              Segment ${seg.segment_number} (${seg.time_range.replace("-", "–")}s):
+            </span>
+            <button onclick="copyVideoSingleSegmentPrompt(${idx})" class="neo-btn-sm bg-mintblue hover:bg-softmint px-3 py-1 text-xs flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Segment Prompt
+            </button>
+          </div>
+          <p class="text-sm sm:text-base leading-relaxed font-medium text-inkblack select-all">${escapeHtml(seg.full_prompt)}</p>
+        </div>
+      `).join("");
+
+      // 2. Render Per-Segment Interactive Cards with Keyframes + 12 Copyable Fields
+      const detailContainer = document.getElementById("video-segments-detail-container");
+      detailContainer.innerHTML = segments.map((seg, idx) => {
+        const frames = keyframesBySegment?.[idx] || [];
+        return `
+          <div class="neo-card bg-purewhite p-5 sm:p-6 space-y-5 animate-card-in">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-[3px] border-inkblack pb-4">
+              <div class="flex items-center gap-3">
+                <span class="px-3 py-1.5 bg-mintblue border-2 border-inkblack rounded-xl font-display text-sm font-black shadow-neo-sm">
+                  SEGMENT ${seg.segment_number}
+                </span>
+                <div>
+                  <h4 class="font-heading font-bold text-base sm:text-lg text-inkblack">Timeline Window: ${seg.time_range.replace("-", "–")}s</h4>
+                  <p class="text-xs text-charcoal/75">12 Cinematic Cinematography & Motion Attributes</p>
+                </div>
+              </div>
+              <button onclick="copyVideoSingleSegmentPrompt(${idx})" class="neo-btn-sm bg-apricot px-3.5 py-2 text-xs flex items-center gap-1.5">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Standalone Prompt
+              </button>
+            </div>
+
+            ${frames.length > 0 ? `
+              <div class="space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-charcoal/80">Extracted Segment Keyframes (Start / Mid / End):</div>
+                <div class="grid grid-cols-3 gap-3">
+                  ${frames.map((src, fIdx) => `
+                    <div class="relative rounded-xl overflow-hidden border-2 border-inkblack bg-inkblack shadow-neo-sm">
+                      <img src="${src}" alt="Segment ${seg.segment_number} Keyframe ${fIdx + 1}" class="w-full h-24 sm:h-32 object-cover" />
+                      <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 bg-purewhite/95 border border-inkblack rounded text-[10px] font-mono font-bold">
+                        KF ${fIdx + 1}
+                      </span>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            ` : ""}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              ${VIDEO_FIELD_META.map((field) => `
+                <div class="bg-cream border-2 border-inkblack rounded-xl p-3.5 flex flex-col justify-between gap-2">
+                  <div class="flex items-start justify-between gap-2">
+                    <span class="font-heading font-bold text-xs uppercase tracking-wide text-inkblack">${escapeHtml(field.label)}</span>
+                    <button onclick="copyVideoSegmentField(${idx}, '${field.key}', '${escapeHtml(field.label)}')" class="neo-btn-sm bg-purewhite hover:bg-softmint px-2 py-0.5 text-[11px] flex items-center gap-1 shrink-0">
+                      <i data-lucide="copy" class="w-3 h-3"></i> Copy
+                    </button>
+                  </div>
+                  <p class="text-xs sm:text-sm text-charcoal font-medium leading-snug">${escapeHtml(seg[field.key] || "")}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // 3. Render Strict ---JSON OUTPUT---
+      document.getElementById("video-json-pre").innerHTML = syntaxHighlightJson(jsonOutput);
+      document.getElementById("video-results-section").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 6. COPY SYSTEM (PRESERVING EXACT FORMATTING + TOAST FEEDBACK)
+    // =========================================================================
+    function copyToClipboard(text, successLabel) {
+      if (!text) return;
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand("copy");
+        showToast(`Copied: ${successLabel}`);
+      } catch (err) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => showToast(`Copied: ${successLabel}`));
+        }
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function copyFieldValue(mode, key, label) {
+      if (mode === "image" && state.image.result) {
+        copyToClipboard(state.image.result.jsonOutput[key], label);
+      }
+    }
+
+    function copyImageEnglishPrompt() {
+      if (!state.image.result) return;
+      copyToClipboard(state.image.result.englishPrompt, "English Image Prompt");
+    }
+
+    function copyImageJson() {
+      if (!state.image.result) return;
+      copyToClipboard(JSON.stringify(state.image.result.jsonOutput, null, 2), "Image JSON Output");
+    }
+
+    function copyImageAll() {
+      if (!state.image.result) return;
+      const formatted = `---ENGLISH PROMPT---\n${state.image.result.englishPrompt}\n\n---JSON OUTPUT---\n${JSON.stringify(state.image.result.jsonOutput, null, 2)}`;
+      copyToClipboard(formatted, "Complete English Prompt + JSON");
+    }
+
+    function copyVideoSingleSegmentPrompt(segIdx) {
+      const seg = state.video.result?.jsonOutput?.segments?.[segIdx];
+      if (!seg) return;
+      copyToClipboard(seg.full_prompt, `Segment ${seg.segment_number} (${seg.time_range}s) Prompt`);
+    }
+
+    function copyVideoSegmentField(segIdx, key, label) {
+      const seg = state.video.result?.jsonOutput?.segments?.[segIdx];
+      if (!seg) return;
+      copyToClipboard(seg[key], `Seg ${seg.segment_number} — ${label}`);
+    }
+
+    function copyVideoEnglishPrompts() {
+      if (!state.video.result) return;
+      copyToClipboard(state.video.result.englishPromptsText, "All Segment English Prompts");
+    }
+
+    function copyVideoJson() {
+      if (!state.video.result) return;
+      copyToClipboard(JSON.stringify(state.video.result.jsonOutput, null, 2), "Video JSON Output");
+    }
+
+    function copyVideoAll() {
+      if (!state.video.result) return;
+      const formatted = `---ENGLISH PROMPTS---\n${state.video.result.englishPromptsText}\n\n---JSON OUTPUT---\n${JSON.stringify(state.video.result.jsonOutput, null, 2)}`;
+      copyToClipboard(formatted, "Complete Segmented Prompts + JSON");
+    }
+
+    // =========================================================================
+    // 7. DOWNLOAD SYSTEM (.TXT, .JSON, .PDF, DOWNLOAD ALL)
+    // =========================================================================
+    function triggerBlobDownload(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function downloadCurrentImage(format) {
+      if (!state.image.result) return;
+      const baseName = (state.image.file?.name || "image-prompt").replace(/\.[^/.]+$/, "");
+      exportImagePackage(state.image.result, baseName, format);
+    }
+
+    function exportImagePackage(resultObj, baseName, format) {
+      const txtContent = `---ENGLISH PROMPT---\n${resultObj.englishPrompt}\n`;
+      const jsonContent = JSON.stringify(resultObj.jsonOutput, null, 2);
+
+      if (format === "txt" || format === "all") {
+        triggerBlobDownload(txtContent, `${baseName}_prompt.txt`, "text/plain;charset=utf-8");
+      }
+      if (format === "json" || format === "all") {
+        setTimeout(() => {
+          triggerBlobDownload(jsonContent, `${baseName}_analysis.json`, "application/json;charset=utf-8");
+        }, format === "all" ? 200 : 0);
+      }
+      if (format === "pdf" || format === "all") {
+        setTimeout(() => {
+          generatePdfReport({
+            mode: "IMAGE TO PROMPT REPORT",
+            title: baseName,
+            englishSection: resultObj.englishPrompt,
+            jsonObj: resultObj.jsonOutput,
+            filename: `${baseName}_report.pdf`,
+          });
+        }, format === "all" ? 400 : 0);
+      }
+      showToast(`Exported ${format.toUpperCase()} file${format === "all" ? "s" : ""}`);
+    }
+
+    function downloadCurrentVideo(format) {
+      if (!state.video.result) return;
+      const baseName = (state.video.file?.name || "video-segments").replace(/\.[^/.]+$/, "");
+      exportVideoPackage(state.video.result, baseName, format);
+    }
+
+    function exportVideoPackage(resultObj, baseName, format) {
+      const txtContent = `---ENGLISH PROMPTS---\n${resultObj.englishPromptsText}\n`;
+      const jsonContent = JSON.stringify(resultObj.jsonOutput, null, 2);
+
+      if (format === "txt" || format === "all") {
+        triggerBlobDownload(txtContent, `${baseName}_segments.txt`, "text/plain;charset=utf-8");
+      }
+      if (format === "json" || format === "all") {
+        setTimeout(() => {
+          triggerBlobDownload(jsonContent, `${baseName}_analysis.json`, "application/json;charset=utf-8");
+        }, format === "all" ? 200 : 0);
+      }
+      if (format === "pdf" || format === "all") {
+        setTimeout(() => {
+          generatePdfReport({
+            mode: "SEGMENTED CINEMATIC VIDEO REPORT",
+            title: baseName,
+            englishSection: resultObj.englishPromptsText,
+            jsonObj: resultObj.jsonOutput,
+            filename: `${baseName}_report.pdf`,
+          });
+        }, format === "all" ? 400 : 0);
+      }
+      showToast(`Exported ${format.toUpperCase()} file${format === "all" ? "s" : ""}`);
+    }
+
+    function generatePdfReport({ mode, title, englishSection, jsonObj, filename }) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 42;
+      const maxWidth = pageWidth - margin * 2;
+      let y = 46;
+
+      // Neo-Brutalist Header Block
+      doc.setFillColor(255, 179, 138); // Soft Apricot
+      doc.setDrawColor(23, 23, 23);
+      doc.setLineWidth(2);
+      doc.rect(margin, y, maxWidth, 58, "FD");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(23, 23, 23);
+      doc.text("AI PROMPT GENERATOR PRO", margin + 14, y + 24);
+
+      doc.setFontSize(10);
+      doc.text(`${mode}  |  Source: ${title}`, margin + 14, y + 43);
+      y += 78;
+
+      // English Prompt Section Header
+      doc.setFillColor(181, 226, 250); // Mint Blue
+      doc.rect(margin, y, maxWidth, 24, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("ENGLISH PROMPT OUTPUT", margin + 10, y + 16);
+      y += 38;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10.5);
+      const englishLines = doc.splitTextToSize(englishSection, maxWidth);
+      for (const line of englishLines) {
+        if (y > pageHeight - 50) {
+          doc.addPage();
+          y = 46;
+        }
+        doc.text(line, margin, y);
+        y += 15;
+      }
+
+      y += 14;
+      if (y > pageHeight - 80) {
+        doc.addPage();
+        y = 46;
+      }
+
+      // Structured Breakdown Header
+      doc.setFillColor(227, 213, 202); // Sweet Lavender
+      doc.rect(margin, y, maxWidth, 24, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("STRUCTURED JSON ANALYSIS", margin + 10, y + 16);
+      y += 38;
+
+      doc.setFont("courier", "normal");
+      doc.setFontSize(9);
+      const jsonLines = doc.splitTextToSize(JSON.stringify(jsonObj, null, 2), maxWidth);
+      for (const line of jsonLines) {
+        if (y > pageHeight - 46) {
+          doc.addPage();
+          y = 46;
+        }
+        doc.text(line, margin, y);
+        y += 12.5;
+      }
+
+      doc.save(filename);
+    }
+
+    // =========================================================================
+    // 8. PERSISTENT HISTORY SYSTEM (LOCALSTORAGE)
+    // =========================================================================
+    function loadHistoryFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        state.history = raw ? JSON.parse(raw) : [];
+      } catch {
+        state.history = [];
+      }
+      updateHistoryBadges();
+    }
+
+    function saveToHistory(entry) {
+      state.history.unshift(entry);
+      if (state.history.length > 40) {
+        state.history = state.history.slice(0, 40);
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history));
+      } catch {
+        // Fallback if quota exceeded: drop thumbnails on older entries
+        state.history.forEach((h, idx) => {
+          if (idx > 3) h.thumbnail = null;
+        });
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history));
+        } catch {}
+      }
+      updateHistoryBadges();
+    }
+
+    function updateHistoryBadges() {
+      const count = state.history.length;
+      document.getElementById("history-count-badge").textContent = count;
+      document.getElementById("mobile-history-badge").textContent = count;
+      document.getElementById("mnav-history-count").textContent = count;
+    }
+
+    function renderHomeRecentHistory() {
+      const container = document.getElementById("home-recent-history");
+      if (!container) return;
+
+      if (state.history.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-cream border-2 border-dashed border-inkblack rounded-xl p-6 text-center space-y-2">
+            <p class="font-heading font-bold text-sm text-inkblack">No saved prompt sessions yet.</p>
+            <p class="text-xs text-charcoal/75">Run an Image or Segmented Video analysis to automatically archive it here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const pastelCycle = ["bg-apricot/40", "bg-mintblue/45", "bg-lavender/70"];
+      container.innerHTML = state.history.slice(0, 3).map((item, idx) => {
+        const previewSnippet = item.mode === "image"
+          ? item.result.englishPrompt
+          : item.result.englishPromptsText;
+        return `
+          <div class="neo-card ${pastelCycle[idx % pastelCycle.length]} p-4 flex flex-col justify-between gap-3">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="px-2 py-0.5 text-[10px] font-mono font-extrabold uppercase bg-purewhite border border-inkblack rounded">
+                  ${item.mode === "image" ? "IMAGE" : "VIDEO"}
+                </span>
+                <span class="text-[11px] font-mono text-charcoal/75">${formatDate(item.timestamp)}</span>
+              </div>
+              <h4 class="font-heading font-bold text-sm text-inkblack truncate">${escapeHtml(item.title)}</h4>
+              <p class="text-xs text-charcoal/90 line-clamp-3 leading-relaxed">${escapeHtml(previewSnippet)}</p>
+            </div>
+            <button onclick="reopenHistoryItem('${item.id}')" class="neo-btn-sm bg-purewhite hover:bg-softmint w-full py-2 text-xs flex items-center justify-center gap-1.5">
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Reopen Session
+            </button>
+          </div>
+        `;
+      }).join("");
+      lucide.createIcons();
+    }
+
+    function renderHistoryView() {
+      const grid = document.getElementById("history-grid");
+      const filter = document.getElementById("history-filter-select")?.value || "all";
+      const filtered = state.history.filter((h) => filter === "all" || h.mode === filter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full neo-card bg-purewhite p-10 text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-cream border-2 border-inkblack flex items-center justify-center shadow-neo-sm">
+              <i data-lucide="folder-open" class="w-7 h-7 text-inkblack"></i>
+            </div>
+            <h3 class="font-display text-lg font-black text-inkblack">No History Entries Found</h3>
+            <p class="text-sm text-charcoal/80 max-w-md mx-auto">
+              Generate prompts using the Image Generator or Segmented Video Generator to store structured reports here.
+            </p>
+            <div class="flex justify-center gap-3 pt-2">
+              <button onclick="navigateTo('image')" class="neo-btn-sm bg-apricot px-4 py-2.5 text-xs sm:text-sm">Go to Image Generator</button>
+              <button onclick="navigateTo('video')" class="neo-btn-sm bg-mintblue px-4 py-2.5 text-xs sm:text-sm">Go to Video Generator</button>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const alternatingColors = ["bg-apricot", "bg-mintblue", "bg-lavender", "bg-softmint"];
+      grid.innerHTML = filtered.map((item, idx) => {
+        const cardBg = alternatingColors[idx % alternatingColors.length];
+        const summaryText = item.mode === "image"
+          ? item.result.englishPrompt
+          : item.result.englishPromptsText;
+        const badgeText = item.mode === "image"
+          ? `IMAGE • --ar ${item.aspectRatio || "1:1"}`
+          : `VIDEO • ${item.segmentCount || 1} SEGMENTS (${item.duration || 0}s)`;
+
+        return `
+          <div class="neo-card ${cardBg} p-5 sm:p-6 flex flex-col justify-between gap-4 animate-card-in">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <span class="px-2.5 py-1 bg-purewhite border-2 border-inkblack rounded-lg font-mono text-xs font-extrabold shadow-neo-sm">
+                  ${badgeText}
+                </span>
+                <button onclick="confirmDeleteHistoryItem('${item.id}')" class="neo-btn-sm bg-purewhite hover:bg-coralalert p-2 text-inkblack" title="Delete entry">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-3.5 bg-purewhite border-2 border-inkblack rounded-xl p-3">
+                ${item.thumbnail
+                  ? `<img src="${item.thumbnail}" alt="Thumbnail" class="w-16 h-16 rounded-lg object-cover border-2 border-inkblack shrink-0" />`
+                  : `<div class="w-16 h-16 rounded-lg bg-cream border-2 border-inkblack flex items-center justify-center shrink-0"><i data-lucide="${item.mode === "image" ? "image" : "film"}" class="w-6 h-6"></i></div>`
+                }
+                <div class="min-w-0">
+                  <h4 class="font-display text-sm sm:text-base font-black text-inkblack truncate">${escapeHtml(item.title)}</h4>
+                  <p class="text-xs font-mono text-charcoal/75 mt-0.5">${formatDate(item.timestamp)}</p>
+                </div>
+              </div>
+
+              <div class="bg-purewhite border-2 border-inkblack rounded-xl p-3.5">
+                <p class="text-xs sm:text-sm text-charcoal font-medium line-clamp-3 leading-relaxed">${escapeHtml(summaryText)}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button onclick="reopenHistoryItem('${item.id}')" class="neo-btn-sm bg-purewhite hover:bg-softmint px-3.5 py-2 text-xs flex items-center gap-1.5 flex-1 justify-center">
+                <i data-lucide="folder-open" class="w-3.5 h-3.5"></i> Reopen
+              </button>
+              <button onclick="copyHistoryItem('${item.id}')" class="neo-btn-sm bg-purewhite px-3 py-2 text-xs flex items-center gap-1">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy All
+              </button>
+              <button onclick="downloadHistoryItem('${item.id}', 'pdf')" class="neo-btn-sm bg-purewhite px-3 py-2 text-xs flex items-center gap-1">
+                <i data-lucide="file-down" class="w-3.5 h-3.5"></i> PDF
+              </button>
+              <button onclick="downloadHistoryItem('${item.id}', 'json')" class="neo-btn-sm bg-purewhite px-3 py-2 text-xs flex items-center gap-1">
+                <i data-lucide="braces" class="w-3.5 h-3.5"></i> JSON
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function reopenHistoryItem(id) {
+      const entry = state.history.find((h) => h.id === id);
+      if (!entry) return;
+
+      if (entry.mode === "image") {
+        state.image.aspectRatio = entry.aspectRatio || "1:1";
+        state.image.result = JSON.parse(JSON.stringify(entry.result));
+        selectAspectRatio(state.image.aspectRatio);
+        navigateTo("image");
+        renderImageResults();
+        showToast("Reopened Image Prompt Session");
+      } else {
+        state.video.result = JSON.parse(JSON.stringify(entry.result));
+        navigateTo("video");
+        renderVideoResults();
+        showToast("Reopened Segmented Video Session");
+      }
+    }
+
+    function copyHistoryItem(id) {
+      const entry = state.history.find((h) => h.id === id);
+      if (!entry) return;
+      if (entry.mode === "image") {
+        const formatted = `---ENGLISH PROMPT---\n${entry.result.englishPrompt}\n\n---JSON OUTPUT---\n${JSON.stringify(entry.result.jsonOutput, null, 2)}`;
+        copyToClipboard(formatted, `${entry.title} (Prompt + JSON)`);
+      } else {
+        const formatted = `---ENGLISH PROMPTS---\n${entry.result.englishPromptsText}\n\n---JSON OUTPUT---\n${JSON.stringify(entry.result.jsonOutput, null, 2)}`;
+        copyToClipboard(formatted, `${entry.title} (Segmented Prompts + JSON)`);
+      }
+    }
+
+    function downloadHistoryItem(id, format) {
+      const entry = state.history.find((h) => h.id === id);
+      if (!entry) return;
+      const baseName = (entry.title || "prompt-export").replace(/\.[^/.]+$/, "");
+      if (entry.mode === "image") {
+        exportImagePackage(entry.result, baseName, format);
+      } else {
+        exportVideoPackage(entry.result, baseName, format);
+      }
+    }
+
+    function confirmDeleteHistoryItem(id) {
+      openConfirmModal(
+        "Delete History Entry?",
+        "This saved analysis report will be permanently removed from your local archive.",
+        () => {
+          state.history = state.history.filter((h) => h.id !== id);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history));
+          updateHistoryBadges();
+          renderHistoryView();
+          showToast("History entry deleted");
+        }
+      );
+    }
+
+    function confirmClearAllHistory() {
+      if (state.history.length === 0) return;
+      openConfirmModal(
+        "Clear Entire History?",
+        "All saved image and video prompt analyses will be erased from local storage.",
+        () => {
+          state.history = [];
+          localStorage.removeItem(STORAGE_KEY);
+          updateHistoryBadges();
+          renderHistoryView();
+          showToast("All history cleared");
+        }
+      );
+    }
+
+    // =========================================================================
+    // 9. UI UTILITIES (TOASTS, MODALS, SYNTAX HIGHLIGHTING, ERRORS)
+    // =========================================================================
+    function showToast(message) {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = "neo-card bg-softmint px-4 py-3 flex items-center gap-2.5 text-inkblack font-heading font-bold text-xs sm:text-sm pointer-events-auto animate-card-in";
+      toast.innerHTML = `
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-inkblack stroke-[2.5] shrink-0"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(8px)";
+        toast.style.transition = "all 0.2s ease";
+        setTimeout(() => toast.remove(), 220);
+      }, 2600);
+    }
+
+    function showError(mode, message) {
+      const box = document.getElementById(`${mode}-error-box`);
+      const msg = document.getElementById(`${mode}-error-msg`);
+      if (box && msg) {
+        msg.textContent = message;
+        box.classList.remove("hidden");
+        lucide.createIcons();
+      }
+    }
+
+    function hideError(mode) {
+      const box = document.getElementById(`${mode}-error-box`);
+      if (box) box.classList.add("hidden");
+    }
+
+    function toggleJsonCollapse(bodyId, iconId) {
+      const body = document.getElementById(bodyId);
+      const icon = document.getElementById(iconId);
+      const isHidden = body.classList.toggle("hidden");
+      icon.setAttribute("data-lucide", isHidden ? "chevron-down" : "chevron-up");
+      lucide.createIcons();
+    }
+
+    function openConfirmModal(title, body, onConfirm) {
+      document.getElementById("modal-title").textContent = title;
+      document.getElementById("modal-body").textContent = body;
+      const btn = document.getElementById("modal-confirm-btn");
+      btn.onclick = () => {
+        closeConfirmModal();
+        onConfirm();
+      };
+      document.getElementById("confirm-modal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal() {
+      document.getElementById("confirm-modal").classList.add("hidden");
+    }
+
+    function syntaxHighlightJson(obj) {
+      const jsonStr = escapeHtml(JSON.stringify(obj, null, 2));
+      return jsonStr.replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        (match) => {
+          let cls = "json-number";
+          if (/^"/.test(match)) {
+            cls = /:$/.test(match) ? "json-key" : "json-string";
+          } else if (/true|false/.test(match)) {
+            cls = "json-boolean";
+          }
+          return `<span class="${cls}">${match}</span>`;
+        }
+      );
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+      } catch {
+        return "";
+      }
+    }
+  </script>
+</body>
+</html>
